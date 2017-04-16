@@ -6,9 +6,13 @@
 #include <QNetworkInterface>
 #include <QTcpSocket>
 #include <QTime>
+#include <QThread>
 
-//TODO perform binding
-//TODO choose interface
+#include "cls_connstatechecker.h"
+#include "commonnetworkconst.h"
+
+//TODO perform binding - ?
+//TODO choose interface - ?
 
 cls_tcpClient::cls_tcpClient(QWidget *parent) :
     QWidget(parent),
@@ -38,6 +42,20 @@ cls_tcpClient::cls_tcpClient(QWidget *parent) :
     connect(mTcpSocket, SIGNAL(connected()), SLOT(slotConnected()));
     connect(mTcpSocket, SIGNAL(disconnected()), SLOT(slotDisconnected()));
     connect(mTcpSocket, SIGNAL(readyRead()), SLOT(slotReadyRead()));
+
+    // Polling thread - connectivity check
+    mPollingThread = new QThread;
+    cls_connStateChecker* worker = new cls_connStateChecker; // Correponding delete - ?
+    worker->moveToThread(mPollingThread);
+
+    connect(this, SIGNAL(sigStartPoller()), worker, SLOT(Start()));
+    connect(this, SIGNAL(sigStopPoller()), worker, SLOT(Stop()));
+    connect(worker, SIGNAL(performCheck()), this, SLOT(SingleCheck()));
+
+    connect(worker, SIGNAL(finished()), mPollingThread, SLOT(quit()));
+    connect(worker, SIGNAL(finished()), worker, SLOT(deleteLater()));
+    connect(mPollingThread, SIGNAL(finished()), mPollingThread, SLOT(deleteLater()));
+    mPollingThread->start();
 }
 
 cls_tcpClient::~cls_tcpClient()
@@ -46,7 +64,9 @@ cls_tcpClient::~cls_tcpClient()
 
     this->DisconnectFromServer();
 
+    //TODO checks!
     delete mTcpSocket;
+    //delete mPollingThread;
 }
 
 void cls_tcpClient::ConnectToServer()
@@ -128,6 +148,9 @@ void cls_tcpClient::slotConnected()
     ui->leClientHost->setText(clientHost.toString());
     ui->leClientPort->setText(QString::number(clientPort));
     ui->chkConnected->setChecked(true);
+
+    // Start polling - connectivity check
+    emit sigStartPoller();
 }
 
 void cls_tcpClient::slotDisconnected()
@@ -138,6 +161,9 @@ void cls_tcpClient::slotDisconnected()
     ui->leClientHost->setText("");
     ui->leClientPort->setText("");
     ui->chkConnected->setChecked(false);
+
+    // Stop polling  - connectivity check
+    emit sigStopPoller();
 }
 
 void cls_tcpClient::SendToServer(const QString& str)
@@ -175,4 +201,9 @@ void cls_tcpClient::slotReadyRead()
 
         m_nNextBlockSize = 0;
     }
+}
+
+void cls_tcpClient::SingleCheck()
+{
+    this->SendToServer(CHECKREQUEST);
 }

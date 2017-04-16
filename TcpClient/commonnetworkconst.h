@@ -7,4 +7,7 @@
 #define DISCOVERYREQUEST "AreYouServer? "
 #define DISCOVERYANSWER "YesIamServer! "
 
+#define CHECKREQUEST "AreYouHere? "
+#define CHECKANSWER "YesIamHere! "
+
 #endif // COMMONNETWORKCONST_H

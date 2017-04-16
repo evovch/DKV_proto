@@ -46,6 +46,9 @@ cls_ServerFinder::cls_ServerFinder(QWidget *parent) :
     mUdpRecvSocket->bind(DISCOVERYCLIENTPORT, QUdpSocket::ShareAddress);
 
     connect(mUdpRecvSocket, SIGNAL(readyRead()), this, SLOT(ProcessPendingDatagrams()));
+
+    //GUI
+    ui->tableWidget->setColumnCount(1);
 }
 
 cls_ServerFinder::~cls_ServerFinder()
@@ -147,6 +150,12 @@ void cls_ServerFinder::SendBroadcast()
     QString localIP = allEntries.at(0).ip().toString(); //FIXME - here I select the first address, this may be wrong
     QByteArray localIPba = localIP.toLatin1();
 */
+
+    // GUI
+    // First clean the table of previously discovered servers
+    ui->tableWidget->clear();
+    ui->tableWidget->setRowCount(0);
+
     QByteArray datagramBA = DISCOVERYREQUEST;// + localIPba;
 
     QNetworkDatagram datagram;
@@ -166,13 +175,18 @@ void cls_ServerFinder::ProcessPendingDatagrams()
         QNetworkDatagram datagram = mUdpRecvSocket->receiveDatagram();
         qDebug() << "Received";
         Support::PrintDatagramInfo(datagram);
-/*
+
         QString prefix(DISCOVERYANSWER);
-        QString strDatagram(datagram);
+        QString strDatagram(datagram.data());
         if (strDatagram.startsWith(prefix)) {
-            QString serverAddress = strDatagram.mid(prefix.length());
-            qDebug() << serverAddress;
+            QHostAddress serverAddress = datagram.senderAddress();
+            QString strServerAddress = serverAddress.toString();
+
+            // GUI
+            int curRowCount = ui->tableWidget->rowCount();
+            QTableWidgetItem* curItem = new QTableWidgetItem(strServerAddress);
+            ui->tableWidget->insertRow(curRowCount);
+            ui->tableWidget->setItem(curRowCount, 0, curItem);
         }
-*/
     }
 }

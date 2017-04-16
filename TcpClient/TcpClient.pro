@@ -31,16 +31,19 @@ SOURCES += main.cpp\
            cls_multiclient.cpp \
            cls_formconnections.cpp \
            cls_serverfinder.cpp \
-           ../TcpServer/support.cpp
+           ../TcpServer/support.cpp \
+    cls_connstatechecker.cpp
 
 HEADERS += cls_tcpclient.h \
            cls_multiclient.h \
            cls_formconnections.h \
            cls_serverfinder.h \
            commonnetworkconst.h \
-           ../TcpServer/support.h
+           ../TcpServer/support.h \
+    cls_connstatechecker.h
 
 FORMS += cls_tcpclient.ui \
          cls_multiclient.ui \
          cls_formconnections.ui \
-         cls_serverfinder.ui
+         cls_serverfinder.ui \
+    cls_connstatechecker.ui

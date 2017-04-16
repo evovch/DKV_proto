@@ -9,6 +9,7 @@
 #include <QTime>
 
 #include "support.h"
+#include "commonnetworkconst.h"
 
 cls_tcpServer::cls_tcpServer(QWidget *parent) :
     QWidget(parent),
@@ -281,9 +282,13 @@ void cls_tcpServer::slotReadClient()
 
 void cls_tcpServer::React(QTcpSocket* p_socket, const QString& p_receivedMessage)
 {
-    if (p_receivedMessage == "AreYouCamera?") {
+/*    if (p_receivedMessage == "AreYouCamera?") {
         sendToClient(p_socket, "Yes, I am camera!");
     } else {
         sendToClient(p_socket, "Server Response: Received \"" + p_receivedMessage + "\"" );
+    }*/
+
+    if (p_receivedMessage == CHECKREQUEST) {
+        sendToClient(p_socket, CHECKANSWER);
     }
 }

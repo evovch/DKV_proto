@@ -9,6 +9,7 @@ namespace Ui {
 }
 
 class QTcpSocket;
+class QThread;
 
 class cls_tcpClient : public QWidget
 {
@@ -39,10 +40,21 @@ public slots:
     void slotDisconnected();
     void slotReadyRead();
 
+    /*
+     * This slot is called from the connection checker.
+     */
+    void SingleCheck();
+
+signals:
+    void sigStartPoller();
+    void sigStopPoller();
+
 private:
     QTcpSocket* mTcpSocket;
 
     quint16 m_nNextBlockSize;
+
+    QThread* mPollingThread;
 
 private:
     Ui::cls_tcpClient *ui;
