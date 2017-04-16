@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>cls_multiClient</class>
+ <widget class="QTabWidget" name="cls_multiClient">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>442</width>
+    <height>459</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>TabWidget</string>
+  </property>
+  <property name="currentIndex">
+   <number>-1</number>
+  </property>
+ </widget>
+ <resources/>
+ <connections/>
+ <slots>
+  <slot>AddTab()</slot>
+ </slots>
+</ui>
