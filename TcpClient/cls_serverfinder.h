@@ -3,6 +3,8 @@
 
 #include <QWidget>
 
+#include <QHostAddress>
+
 namespace Ui {
     class cls_ServerFinder;
 }
@@ -31,6 +33,11 @@ public slots:
      * UDP broadcast.
      */
     void ProcessPendingDatagrams();
+
+    /*
+     * TCP scanner.
+     */
+    void AddDiscoveredServer(QHostAddress discoveredHost);
 
 signals:
     void sigStartScanner();

@@ -43,6 +43,7 @@ cls_serverFinder::cls_serverFinder(QWidget *parent) :
     workerScanner->moveToThread(tcpScannerThread);
     connect(this, SIGNAL(sigStartScanner()), workerScanner, SLOT(StartScanner()));
     connect(this, SIGNAL(sigStopScanner()), workerScanner, SLOT(StopScanner()));
+    connect(workerScanner, SIGNAL(sigDiscovered(QHostAddress)), this, SLOT(AddDiscoveredServer(QHostAddress)));
     tcpScannerThread->start();
 
     // Broadcasting: request sending socket
@@ -99,10 +100,25 @@ void cls_serverFinder::StartScan()
         qDebug() << "Incorrect host!";
     }
 
+    // GUI
+    // First clean the table of previously discovered servers
+    ui->tableWidget->clear();
+    ui->tableWidget->setRowCount(0);
+
     workerScanner->SetPort(port);
     workerScanner->SetHostRange(ui->leFirstIP->text(), ui->leLastIP->text());
     emit sigStartScanner();
+}
 
+void cls_serverFinder::AddDiscoveredServer(QHostAddress discoveredHost)
+{
+    //qDebug() << "AddDiscoveredServer";
+
+    // GUI
+    int curRowCount = ui->tableWidget->rowCount();
+    QTableWidgetItem* curItem = new QTableWidgetItem(discoveredHost.toString());
+    ui->tableWidget->insertRow(curRowCount);
+    ui->tableWidget->setItem(curRowCount, 0, curItem);
 }
 
 // UDP broadcast part =================================================================================================
