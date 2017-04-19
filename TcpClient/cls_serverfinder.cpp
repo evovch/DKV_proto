@@ -43,6 +43,7 @@ cls_serverFinder::cls_serverFinder(QWidget *parent) :
     workerScanner->moveToThread(tcpScannerThread);
     connect(this, SIGNAL(sigStartScanner()), workerScanner, SLOT(StartScanner()));
     connect(this, SIGNAL(sigStopScanner()), workerScanner, SLOT(StopScanner()));
+    qRegisterMetaType<QHostAddress>("QHostAddress");
     connect(workerScanner, SIGNAL(sigDiscovered(QHostAddress)), this, SLOT(AddDiscoveredServer(QHostAddress)));
     tcpScannerThread->start();
 
