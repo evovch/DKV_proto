@@ -258,7 +258,7 @@ void cls_tcpServer::slotReadClient()
 
     for (;;) {
         if (!m_nNextBlockSize) {
-            if (pClientSocket->bytesAvailable() < sizeof(quint16)) { //TODO fix warning
+            if (pClientSocket->bytesAvailable() < (qint64)sizeof(quint16)) { //TODO fix warning
                 break;
             }
             in >> m_nNextBlockSize;

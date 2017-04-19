@@ -39,9 +39,9 @@ cls_tcpClient::cls_tcpClient(QWidget *parent) :
 
     mTcpSocket = new QTcpSocket(this);
     connect(mTcpSocket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(slotError(QAbstractSocket::SocketError)) );
-    connect(mTcpSocket, SIGNAL(connected()), SLOT(slotConnected()));
-    connect(mTcpSocket, SIGNAL(disconnected()), SLOT(slotDisconnected()));
-    connect(mTcpSocket, SIGNAL(readyRead()), SLOT(slotReadyRead()));
+    connect(mTcpSocket, SIGNAL(connected()), this, SLOT(slotConnected()));
+    connect(mTcpSocket, SIGNAL(disconnected()), this, SLOT(slotDisconnected()));
+    connect(mTcpSocket, SIGNAL(readyRead()), this, SLOT(slotReadyRead()));
 
     // Polling thread - connectivity check
     mPollingThread = new QThread;
@@ -66,7 +66,7 @@ cls_tcpClient::~cls_tcpClient()
 
     //TODO checks!
     delete mTcpSocket;
-    //delete mPollingThread;
+    //delete mPollingThread; //TODO Qt manages that?
 }
 
 void cls_tcpClient::ConnectToServer()
@@ -184,7 +184,7 @@ void cls_tcpClient::slotReadyRead()
 
     for (;;) {
         if (!m_nNextBlockSize) {
-            if (mTcpSocket->bytesAvailable() < sizeof(quint16)) { //TODO fix warning
+            if (mTcpSocket->bytesAvailable() < (qint64)sizeof(quint16)) { //TODO fix warning
                 break;
             }
             in >> m_nNextBlockSize;

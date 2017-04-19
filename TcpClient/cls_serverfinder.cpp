@@ -2,17 +2,18 @@
 #include "ui_cls_serverfinder.h"
 
 #include <QList>
+#include <QThread>
 
 // networking
 #include <QNetworkDatagram>
 #include <QNetworkInterface>
-#include <QTcpSocket>
 #include <QUdpSocket>
 
 #include "commonnetworkconst.h"
 #include "support.h"
+#include "cls_tcpserverscanner.h"
 
-cls_ServerFinder::cls_ServerFinder(QWidget *parent) :
+cls_serverFinder::cls_serverFinder(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::cls_ServerFinder)
 {
@@ -36,12 +37,18 @@ cls_ServerFinder::cls_ServerFinder(QWidget *parent) :
     ui->leFirstIP->setText("192.168.0.1");
     ui->leLastIP->setText("192.168.0.254");
 
-    mTcpSocket = new QTcpSocket(this);
+    // TCP scanner.
+    tcpScannerThread = new QThread;
+    workerScanner = new cls_tcpServerScanner; // Correponding delete - ?
+    workerScanner->moveToThread(tcpScannerThread);
+    connect(this, SIGNAL(sigStartScanner()), workerScanner, SLOT(StartScanner()));
+    connect(this, SIGNAL(sigStopScanner()), workerScanner, SLOT(StopScanner()));
+    tcpScannerThread->start();
 
     // Broadcasting: request sending socket
     mUdpSndSocket = new QUdpSocket(this);
 
-    // Broadcasting: answer reciving socket
+    // Broadcasting: answer receiving socket
     mUdpRecvSocket = new QUdpSocket(this);
     mUdpRecvSocket->bind(DISCOVERYCLIENTPORT, QUdpSocket::ShareAddress);
 
@@ -51,20 +58,18 @@ cls_ServerFinder::cls_ServerFinder(QWidget *parent) :
     ui->tableWidget->setColumnCount(1);
 }
 
-cls_ServerFinder::~cls_ServerFinder()
+cls_serverFinder::~cls_serverFinder()
 {
     delete ui;
 
-    //TODO disconnect if any connections are active
-
-    //delete mTcpSocket;
+    //TODO stop the TCP scanner somehow?
 
     //TODO check
     delete mUdpSndSocket;
     delete mUdpRecvSocket;
 }
 
-void cls_ServerFinder::StartScan()
+void cls_serverFinder::StartScan()
 {
 /*
     // Get the selected interface name from the list
@@ -85,7 +90,7 @@ void cls_ServerFinder::StartScan()
     //TODO implement checks
     if (port < 1) {
     }
-/*
+
     // Get the host name from the text box
     QString host = ui->leFirstIP->text();
 
@@ -94,23 +99,16 @@ void cls_ServerFinder::StartScan()
         qDebug() << "Incorrect host!";
     }
 
-    QHostAddress curHost(host);
+    workerScanner->SetPort(port);
+    workerScanner->SetHostRange(ui->leFirstIP->text(), ui->leLastIP->text());
+    emit sigStartScanner();
 
-    this->TryToConnectToServer(curHost, port);
-*/
 }
 
-void cls_ServerFinder::TryToConnectToServer(const QHostAddress& p_host, unsigned int p_port)
-{
-    qDebug().nospace().noquote() << "Connecting to host " << p_host.toString() << " on port " << p_port << "...";
+// UDP broadcast part =================================================================================================
 
-    //TODO implement check - if connected
-
-    // Per-se start the client
-    mTcpSocket->connectToHost(p_host, p_port);
-}
-
-void cls_ServerFinder::SendBroadcast()
+// UDP broadcast request sender
+void cls_serverFinder::SendBroadcast()
 {
 /*
     // Get the selected interface name from the list
@@ -169,7 +167,8 @@ void cls_ServerFinder::SendBroadcast()
     mUdpSndSocket->writeDatagram(datagram);
 }
 
-void cls_ServerFinder::ProcessPendingDatagrams()
+// UDP broadcast response catcher
+void cls_serverFinder::ProcessPendingDatagrams()
 {
     while (mUdpRecvSocket->hasPendingDatagrams()) {
         QNetworkDatagram datagram = mUdpRecvSocket->receiveDatagram();
