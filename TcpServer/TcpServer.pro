@@ -29,11 +29,18 @@ INCLUDEPATH += ../TcpClient/
 SOURCES += main.cpp\
            cls_tcpserver.cpp \
            cls_broadcastreceiver.cpp \
-           support.cpp
+           support.cpp \
+           cls_bonecamera.cpp \
+           cls_boneservermainwindow.cpp \
+    cls_lvloop.cpp
 
 HEADERS += cls_tcpserver.h \
            cls_broadcastreceiver.h \
            ../TcpClient/commonnetworkconst.h \
-           support.h
+           support.h \
+           cls_bonecamera.h \
+           cls_boneservermainwindow.h \
+    cls_lvloop.h
 
-FORMS += cls_tcpserver.ui
+FORMS += cls_tcpserver.ui \
+         cls_boneservermainwindow.ui
