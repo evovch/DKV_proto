@@ -111,12 +111,15 @@ void cls_tcpServerScanner::slotBunchTimedOut()
 
     if (goOn) {
         this->NextBunch(Support::NextAddress(mCurrentHost));
+    } else {
+        emit sigScanFinished();
     }
 }
 
 void cls_tcpServerScanner::StopScanner()
 {
     qDebug() << "cls_tcpServerScanner::StopScanner";
+    goOn = false;
 }
 
 void cls_tcpServerScanner::TryToConnectToServer(QTcpSocket* p_tcpSocket, QString p_host, unsigned int p_port)

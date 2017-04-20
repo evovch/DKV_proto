@@ -28,6 +28,6 @@ void cls_multiClient::myAddTab()
 void cls_multiClient::myRemoveTab()
 {
     cls_tcpClient* currentTab = (cls_tcpClient*)this->currentWidget();
-    currentTab->DisconnectFromServer();
+    currentTab->on_pbDisconnect_clicked();
     this->removeTab(this->currentIndex());
 }

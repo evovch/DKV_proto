@@ -130,7 +130,7 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_3">
      <item>
-      <widget class="QPushButton" name="pushButton">
+      <widget class="QPushButton" name="pbDisconnect">
        <property name="text">
         <string>Disconnect</string>
        </property>
@@ -150,7 +150,7 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_2">
+      <widget class="QPushButton" name="pbConnect">
        <property name="text">
         <string>Connect</string>
        </property>
@@ -159,7 +159,14 @@
     </layout>
    </item>
    <item>
-    <widget class="QListWidget" name="listWidget_2"/>
+    <widget class="QListWidget" name="listWidget_2">
+     <property name="minimumSize">
+      <size>
+       <width>100</width>
+       <height>100</height>
+      </size>
+     </property>
+    </widget>
    </item>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_7">
@@ -167,7 +174,7 @@
       <widget class="QLineEdit" name="lineEdit"/>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_3">
+      <widget class="QPushButton" name="pbSend">
        <property name="text">
         <string>Send</string>
        </property>
@@ -179,56 +186,7 @@
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>
- <connections>
-  <connection>
-   <sender>pushButton_2</sender>
-   <signal>clicked()</signal>
-   <receiver>cls_tcpClient</receiver>
-   <slot>ConnectToServer()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>332</x>
-     <y>303</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>395</x>
-     <y>347</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>pushButton</sender>
-   <signal>clicked()</signal>
-   <receiver>cls_tcpClient</receiver>
-   <slot>DisconnectFromServer()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>83</x>
-     <y>303</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>1</x>
-     <y>373</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>pushButton_3</sender>
-   <signal>clicked()</signal>
-   <receiver>cls_tcpClient</receiver>
-   <slot>SendMessage()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>324</x>
-     <y>641</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>337</x>
-     <y>617</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
  <slots>
   <slot>ConnectToServer()</slot>
   <slot>DisconnectFromServer()</slot>

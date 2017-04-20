@@ -26,13 +26,6 @@ public:
 
 public slots:
     /*
-     * These slots are connected to the GUI objects in the Designer.
-     */
-    void ConnectToServer();
-    void DisconnectFromServer();
-    void SendMessage();
-
-    /*
      * These slots are connected to some signals in the code.
      */
     void slotError(QAbstractSocket::SocketError);
@@ -48,6 +41,11 @@ public slots:
 signals:
     void sigStartPoller();
     void sigStopPoller();
+
+public slots:
+    void on_pbConnect_clicked();
+    void on_pbDisconnect_clicked();
+    void on_pbSend_clicked();
 
 private:
     QTcpSocket* mTcpSocket;

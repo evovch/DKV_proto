@@ -23,12 +23,6 @@ public:
 
 public slots:
     /*
-     * These slots are connected to the GUI objects in the Designer.
-     */
-    void StartScan();
-    void SendBroadcast();
-
-    /*
      * These slots are connected to some signals in the code.
      * UDP broadcast.
      */
@@ -38,10 +32,16 @@ public slots:
      * TCP scanner.
      */
     void AddDiscoveredServer(QHostAddress discoveredHost);
+    void ScanFinished();
 
 signals:
     void sigStartScanner();
     void sigStopScanner();
+
+private slots:
+    void on_pbStartScan_clicked();
+    void on_pbStopScan_clicked();
+    void on_pbSendBroadcast_clicked();
 
 private:
     Ui::cls_ServerFinder *ui;

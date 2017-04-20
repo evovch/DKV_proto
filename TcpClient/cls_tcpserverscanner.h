@@ -27,6 +27,7 @@ public:
 
 signals:
     void sigDiscovered(QHostAddress discoveredHost);
+    void sigScanFinished();
 
 public slots:
     void StartScanner();

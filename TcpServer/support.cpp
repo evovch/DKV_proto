@@ -63,6 +63,7 @@ QString Support::NextAddress(QString curAddress)
     return next.toString();
 }
 
+/*
 #ifdef Q_OS_WIN
 #include <windows.h> // for Sleep
 #endif
@@ -75,3 +76,4 @@ void Support::myqSleep(int ms)
     nanosleep(&ts, NULL);
 #endif
 }
+*/

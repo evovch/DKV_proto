@@ -96,6 +96,13 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_3">
      <item>
+      <widget class="QPushButton" name="pbStopScan">
+       <property name="text">
+        <string>Stop TCP scan</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <spacer name="horizontalSpacer">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
@@ -109,12 +116,12 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton">
+      <widget class="QPushButton" name="pbStartScan">
        <property name="enabled">
         <bool>true</bool>
        </property>
        <property name="text">
-        <string>Scan</string>
+        <string>Start TCP scan</string>
        </property>
       </widget>
      </item>
@@ -136,9 +143,9 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_2">
+      <widget class="QPushButton" name="pbSendBroadcast">
        <property name="text">
-        <string>Send broadcast</string>
+        <string>Send UDP broadcast</string>
        </property>
       </widget>
      </item>
@@ -150,40 +157,7 @@
   </layout>
  </widget>
  <resources/>
- <connections>
-  <connection>
-   <sender>pushButton</sender>
-   <signal>clicked()</signal>
-   <receiver>cls_ServerFinder</receiver>
-   <slot>StartScan()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>258</x>
-     <y>239</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>268</x>
-     <y>152</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>pushButton_2</sender>
-   <signal>clicked()</signal>
-   <receiver>cls_ServerFinder</receiver>
-   <slot>SendBroadcast()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>180</x>
-     <y>263</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>264</x>
-     <y>316</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
  <slots>
   <slot>StartScan()</slot>
   <slot>SendBroadcast()</slot>

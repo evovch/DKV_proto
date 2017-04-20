@@ -14,7 +14,8 @@ public:
     static void PrintDatagramInfo(QNetworkDatagram& datagram);
     static void PrintSocketInfo(QTcpSocket* socket);
     static QString NextAddress(QString curAddress);
-    static void myqSleep(int ms);
+    /*static void myqSleep(int ms);*/
+
 };
 
 #endif // SUPPORT_HPP

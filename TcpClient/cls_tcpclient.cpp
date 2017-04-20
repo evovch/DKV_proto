@@ -62,59 +62,59 @@ cls_tcpClient::~cls_tcpClient()
 {
     delete ui;
 
-    this->DisconnectFromServer();
+    this->on_pbDisconnect_clicked();
 
     //TODO checks!
     delete mTcpSocket;
     //delete mPollingThread; //TODO Qt manages that?
 }
 
-void cls_tcpClient::ConnectToServer()
+void cls_tcpClient::on_pbConnect_clicked()
 {
-/*
-    // Get the selected interface name from the list
-    QString interface;
-    interface = ui->lstInterfaces->currentItem()->text();
+    /*
+        // Get the selected interface name from the list
+        QString interface;
+        interface = ui->lstInterfaces->currentItem()->text();
 
-    //TODO implement checks
-    if (interface == "") {
-    }
-*/
-    //TODO implement checks
-    if (ui->lePort->text() == "") {
-        qDebug() << "Incorrect port!";
-    }
+        //TODO implement checks
+        if (interface == "") {
+        }
+    */
+        //TODO implement checks
+        if (ui->lePort->text() == "") {
+            qDebug() << "Incorrect port!";
+        }
 
-    unsigned int port = ui->lePort->text().toInt();
+        unsigned int port = ui->lePort->text().toInt();
 
-    //TODO implement checks
-    if (port < 1) {
-    }
+        //TODO implement checks
+        if (port < 1) {
+        }
 
-    // Get the host name from the text box
-    QString host = ui->leHost->text();
+        // Get the host name from the text box
+        QString host = ui->leHost->text();
 
-    //TODO implement checks
-    if (host == "") {
-        qDebug() << "Incorrect host!";
-    }
+        //TODO implement checks
+        if (host == "") {
+            qDebug() << "Incorrect host!";
+        }
 
-    qDebug().nospace().noquote() << "Connecting to host " << host << " on port " << port << "...";
+        qDebug().nospace().noquote() << "Connecting to host " << host << " on port " << port << "...";
 
-    //TODO implement check - if connected
+        //TODO implement check - if connected
 
-    // Per-se start the client
-    mTcpSocket->connectToHost(host, port);
+        // Per-se start the client
+        mTcpSocket->connectToHost(host, port);
 }
 
-void cls_tcpClient::DisconnectFromServer()
+void cls_tcpClient::on_pbDisconnect_clicked()
 {
     //TODO check
     qDebug() << "Disconnecting...";
     mTcpSocket->disconnectFromHost();
 }
 
-void cls_tcpClient::SendMessage()
+void cls_tcpClient::on_pbSend_clicked()
 {
     this->SendToServer(ui->lineEdit->text());
 }

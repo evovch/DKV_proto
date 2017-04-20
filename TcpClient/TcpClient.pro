@@ -32,8 +32,9 @@ SOURCES += main.cpp\
            cls_formconnections.cpp \
            cls_serverfinder.cpp \
            ../TcpServer/support.cpp \
-    cls_connstatechecker.cpp \
-    cls_tcpserverscanner.cpp
+           cls_connstatechecker.cpp \
+           cls_tcpserverscanner.cpp \
+           cls_mdiwindow.cpp
 
 HEADERS += cls_tcpclient.h \
            cls_multiclient.h \
@@ -41,11 +42,13 @@ HEADERS += cls_tcpclient.h \
            cls_serverfinder.h \
            commonnetworkconst.h \
            ../TcpServer/support.h \
-    cls_connstatechecker.h \
-    cls_tcpserverscanner.h
+           cls_connstatechecker.h \
+           cls_tcpserverscanner.h \
+           cls_mdiwindow.h
 
 FORMS += cls_tcpclient.ui \
          cls_multiclient.ui \
          cls_formconnections.ui \
          cls_serverfinder.ui \
-    cls_connstatechecker.ui
+         cls_connstatechecker.ui \
+         cls_mdiwindow.ui

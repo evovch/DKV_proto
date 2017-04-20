@@ -1,15 +1,16 @@
 #include <QApplication>
 
-#include "cls_formconnections.h"
-#include "cls_serverfinder.h"
+#include "cls_mdiwindow.h"
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    cls_formConnections w1;
-    cls_serverFinder w2;
-    w1.show();
-    w2.show();
+
+    cls_mdiWindow* mainWin = new cls_mdiWindow();
+    mainWin->show();
+
+    // Rediect qDebug into the GUI text editor
+    qInstallMessageHandler(cls_mdiWindow::myMessageOutput);
 
     return a.exec();
 }
