@@ -7,6 +7,8 @@ namespace Ui {
     class cls_boneServerMainWindow;
 }
 
+class cls_boneCamera;
+
 class cls_boneServerMainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -21,10 +23,14 @@ private slots:
 //    void on_pbStartLvLoop_clicked();
 //    void on_pbStopLvLoop_clicked();
 
+    void on_pushButton_clicked();
+
 private:
     Ui::cls_boneServerMainWindow *ui;
 
     static cls_boneServerMainWindow* mInstance;
+
+    cls_boneCamera* mCameraObj;
 
 };
 

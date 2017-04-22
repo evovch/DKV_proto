@@ -3,7 +3,7 @@
 #include <QDebug>
 #include <QTimer>
 
-#define LVLOOPTIMERPERIOD 5000 // ms
+#define LVLOOPTIMERPERIOD 1000 // ms
 
 cls_lvLoop::cls_lvLoop(QObject *parent) :
     QObject(parent)

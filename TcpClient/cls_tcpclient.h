@@ -41,11 +41,14 @@ public slots:
 signals:
     void sigStartPoller();
     void sigStopPoller();
+    void sigDataReceived(QByteArray& data);
 
 public slots:
     void on_pbConnect_clicked();
     void on_pbDisconnect_clicked();
     void on_pbSend_clicked();
+
+    void slotDataReceived(QByteArray& data);
 
 private:
     QTcpSocket* mTcpSocket;

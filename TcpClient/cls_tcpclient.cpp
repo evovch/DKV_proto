@@ -10,6 +10,7 @@
 
 #include "cls_connstatechecker.h"
 #include "commonnetworkconst.h"
+#include "support.h"
 
 //TODO perform binding - ?
 //TODO choose interface - ?
@@ -42,6 +43,7 @@ cls_tcpClient::cls_tcpClient(QWidget *parent) :
     connect(mTcpSocket, SIGNAL(connected()), this, SLOT(slotConnected()));
     connect(mTcpSocket, SIGNAL(disconnected()), this, SLOT(slotDisconnected()));
     connect(mTcpSocket, SIGNAL(readyRead()), this, SLOT(slotReadyRead()));
+    connect(this, SIGNAL(sigDataReceived(QByteArray&)), this, SLOT(slotDataReceived(QByteArray&)));
 
     // Polling thread - connectivity check
     mPollingThread = new QThread;
@@ -179,6 +181,38 @@ void cls_tcpClient::SendToServer(const QString& str)
 
 void cls_tcpClient::slotReadyRead()
 {
+    QByteArray* buffer = new QByteArray();
+    qint32* s = new qint32(0);
+    qint32 size = *s;
+
+    while (mTcpSocket->bytesAvailable() > 0)
+    {
+        buffer->append(mTcpSocket->readAll());
+        while ((size == 0 && buffer->size() >= 4) || (size > 0 && buffer->size() >= size)) //While can process data, process it
+        {
+            if (size == 0 && buffer->size() >= 4) //if size of data has received completely, then store it on our global variable
+            {
+                size = Support::ArrayToInt(buffer->mid(0, 4));
+                *s = size;
+                buffer->remove(0, 4);
+            }
+            if (size > 0 && buffer->size() >= size) // If data has received completely, then emit our SIGNAL with the data
+            {
+                QByteArray data = buffer->mid(0, size);
+                buffer->remove(0, size);
+                size = 0;
+                *s = size;
+                emit sigDataReceived(data);
+            }
+        }
+    }
+
+    delete buffer;
+    delete s;
+}
+
+/*void cls_tcpClient::slotReadyRead()
+{
     QDataStream in(mTcpSocket);
     in.setVersion(QDataStream::Qt_5_8);
 
@@ -201,9 +235,17 @@ void cls_tcpClient::slotReadyRead()
 
         m_nNextBlockSize = 0;
     }
+}*/
+
+void cls_tcpClient::slotDataReceived(QByteArray& data)
+{
+    qDebug() << "Data received";
+    QImage image;
+    image.loadFromData(data, "png");
+    ui->lblImage->setPixmap(QPixmap::fromImage(image));
 }
 
 void cls_tcpClient::SingleCheck()
 {
-    this->SendToServer(CHECKREQUEST);
+    //this->SendToServer(CHECKREQUEST);
 }

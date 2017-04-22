@@ -29,7 +29,7 @@ public:
     /*
      * Send a string to a certain client identified using the socket-argument.
      */
-    void sendToClient(QTcpSocket* pSocket, const QString& str);
+    void sendToClient(QTcpSocket* p_socket, const QString& str);
 
 public slots:
     /*
@@ -47,6 +47,7 @@ public slots:
     void slotClientDisconnect();
     void slotUpdateSocketsState();
     void slotReadClient();
+    void slotSendImageToAll(const QImage& p_image);
 
 private:
     QTcpServer* mTcpServer;
@@ -55,6 +56,8 @@ private:
     quint16 m_nNextBlockSize;
 
     void React(QTcpSocket* p_socket, const QString& p_receivedMessage);
+
+    void SendImage(QTcpSocket* p_socket, const QImage& p_image);
 
 private:
     Ui::cls_tcpServer *ui;

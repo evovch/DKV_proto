@@ -14,6 +14,8 @@ public:
     static void PrintDatagramInfo(QNetworkDatagram& datagram);
     static void PrintSocketInfo(QTcpSocket* socket);
     static QString NextAddress(QString curAddress);
+    static qint32 ArrayToInt(QByteArray source);
+    static QByteArray IntToArray(qint32 source);
     /*static void myqSleep(int ms);*/
 
 };

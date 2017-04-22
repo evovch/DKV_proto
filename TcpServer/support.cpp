@@ -1,9 +1,9 @@
 #include "support.h"
 
-#include <QHostAddress>
 #include <QNetworkDatagram>
 #include <QHostAddress>
 #include <QTcpSocket>
+#include <QDataStream>
 
 QString Support::StateToString(QAbstractSocket::SocketState stat)
 {
@@ -61,6 +61,22 @@ QString Support::NextAddress(QString curAddress)
     }
     next.setAddress(curNum);
     return next.toString();
+}
+
+qint32 Support::ArrayToInt(QByteArray source)
+{
+    qint32 temp;
+    QDataStream data(&source, QIODevice::ReadWrite);
+    data >> temp;
+    return temp;
+}
+
+QByteArray Support::IntToArray(qint32 source)
+{
+    QByteArray temp;
+    QDataStream data(&temp, QIODevice::ReadWrite);
+    data << source;
+    return temp;
 }
 
 /*

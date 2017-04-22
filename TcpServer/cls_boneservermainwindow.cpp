@@ -7,6 +7,7 @@
 #include "cls_broadcastreceiver.h"
 #include "cls_lvloop.h"
 #include "cls_tcpserver.h"
+#include "cls_bonecamera.h"
 
 // Singleton management
 cls_boneServerMainWindow* cls_boneServerMainWindow::mInstance = nullptr;
@@ -34,6 +35,7 @@ cls_boneServerMainWindow::cls_boneServerMainWindow(QWidget *parent) :
     receiverThread->start();
 
     // Create and send to a separate thread the "Live View Loop"
+    //TODO stop the thread?
     cls_lvLoop* lvLoopObj = new cls_lvLoop;
     QThread* lvLoopThread = new QThread;
     lvLoopObj->moveToThread(lvLoopThread);
@@ -45,6 +47,10 @@ cls_boneServerMainWindow::cls_boneServerMainWindow(QWidget *parent) :
     cls_tcpServer* theServer = new cls_tcpServer(this);
     ui->mdiArea->addSubWindow(theServer);
     theServer->show();
+
+    mCameraObj = new cls_boneCamera(this);
+    mCameraObj->SetDrawWidget(ui->label);
+    connect(mCameraObj, SIGNAL(sigFrameReady(const QImage&)), theServer, SLOT(slotSendImageToAll(const QImage&)));
 }
 
 cls_boneServerMainWindow::~cls_boneServerMainWindow()
@@ -53,6 +59,9 @@ cls_boneServerMainWindow::~cls_boneServerMainWindow()
 
     // Singleton management
     mInstance = nullptr;
+
+    //TODO check
+    delete mCameraObj;
 }
 
 // Singleton management
@@ -63,4 +72,9 @@ cls_boneServerMainWindow* cls_boneServerMainWindow::GetInstance()
     } else {
         return mInstance;
     }
+}
+
+void cls_boneServerMainWindow::on_pushButton_clicked()
+{
+    mCameraObj->ProduceTestFrame();
 }

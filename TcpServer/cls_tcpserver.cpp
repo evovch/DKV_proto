@@ -7,6 +7,7 @@
 #include <QTcpServer>
 #include <QTcpSocket>
 #include <QTime>
+#include <QBuffer>
 
 #include "support.h"
 #include "commonnetworkconst.h"
@@ -238,7 +239,10 @@ bool cls_tcpServer::IsHealthy()
     return true;
 }
 
-void cls_tcpServer::sendToClient(QTcpSocket* pSocket, const QString& str)
+/*
+ * Send a string over a certain connection.
+ */
+void cls_tcpServer::sendToClient(QTcpSocket* p_socket, const QString& str)
 {
     QByteArray arrBlock;
     QDataStream out(&arrBlock, QIODevice::WriteOnly);
@@ -246,7 +250,33 @@ void cls_tcpServer::sendToClient(QTcpSocket* pSocket, const QString& str)
     out << quint16(0) << QTime::currentTime() << str;
     out.device()->seek(0);
     out << quint16(arrBlock.size() - sizeof(quint16));
-    pSocket->write(arrBlock);
+    p_socket->write(arrBlock);
+}
+
+/*
+ * Send an image to all open connections.
+ */
+void cls_tcpServer::slotSendImageToAll(const QImage& p_image)
+{
+    qDebug() << "Sending an image to all";
+    foreach (QTcpSocket* curSocket, mListOfSockets) {
+        this->SendImage(curSocket, p_image);
+    }
+}
+
+/*
+ * Send an image over a certain connection.
+ */
+void cls_tcpServer::SendImage(QTcpSocket* p_socket, const QImage& p_image)
+{
+    QByteArray arrBlock;
+    QBuffer buffer(&arrBlock);
+    p_image.save(&buffer, "png");
+    //qDebug() << "------------------------------------------------------------";
+    //qDebug() << QString(arrBlock.toHex());
+    //qDebug() << "------------------------------------------------------------";
+    p_socket->write(Support::IntToArray(arrBlock.size()));
+    p_socket->write(arrBlock);
 }
 
 void cls_tcpServer::slotReadClient()
