@@ -57,6 +57,11 @@ private:
 
     QThread* mPollingThread;
 
+    // Image receiving
+    QByteArray* mBuffer;
+    qint32 mSize;
+    bool mWaitForSize;
+
 private:
     Ui::cls_tcpClient *ui;
 

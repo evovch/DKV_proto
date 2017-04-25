@@ -58,6 +58,12 @@ cls_tcpClient::cls_tcpClient(QWidget *parent) :
     connect(worker, SIGNAL(finished()), worker, SLOT(deleteLater()));
     connect(mPollingThread, SIGNAL(finished()), mPollingThread, SLOT(deleteLater()));
     mPollingThread->start();
+
+
+    // Image receiving
+    mBuffer = new QByteArray();
+    mSize = 0;
+    mWaitForSize = true;
 }
 
 cls_tcpClient::~cls_tcpClient()
@@ -69,6 +75,10 @@ cls_tcpClient::~cls_tcpClient()
     //TODO checks!
     delete mTcpSocket;
     //delete mPollingThread; //TODO Qt manages that?
+
+    // Image receiving
+    //TODO check!
+    delete mBuffer;
 }
 
 void cls_tcpClient::on_pbConnect_clicked()
@@ -181,34 +191,40 @@ void cls_tcpClient::SendToServer(const QString& str)
 
 void cls_tcpClient::slotReadyRead()
 {
-    QByteArray* buffer = new QByteArray();
-    qint32* s = new qint32(0);
-    qint32 size = *s;
+    qDebug() << "------slotReadyRead. bytesAvailable=" << mTcpSocket->bytesAvailable();
 
     while (mTcpSocket->bytesAvailable() > 0)
     {
-        buffer->append(mTcpSocket->readAll());
-        while ((size == 0 && buffer->size() >= 4) || (size > 0 && buffer->size() >= size)) //While can process data, process it
-        {
-            if (size == 0 && buffer->size() >= 4) //if size of data has received completely, then store it on our global variable
-            {
-                size = Support::ArrayToInt(buffer->mid(0, 4));
-                *s = size;
-                buffer->remove(0, 4);
+        qDebug() << "appending. mBuffer.size=" << mBuffer->size();
+        mBuffer->append(mTcpSocket->readAll());
+        qDebug() << "appended. mBuffer.size=" << mBuffer->size();
+
+        if (mWaitForSize) {
+            qDebug() << "Awaiting for the size of the image.";
+            if (mBuffer->size() > 4) {
+                mSize = Support::ArrayToInt(mBuffer->mid(0,4));
+                qDebug() << "Received image size " << mSize;
+                mBuffer->remove(0, 4);
+
+                // Switch to the state [waiting for the data with known size]
+                mWaitForSize = false;
             }
-            if (size > 0 && buffer->size() >= size) // If data has received completely, then emit our SIGNAL with the data
-            {
-                QByteArray data = buffer->mid(0, size);
-                buffer->remove(0, size);
-                size = 0;
-                *s = size;
-                emit sigDataReceived(data);
+        }
+        if (!mWaitForSize) {
+            qDebug() << "Image size available, awaiting for the bunch of this size.";
+            if (mBuffer->size() >= mSize) {
+                QByteArray v_data = mBuffer->mid(0, mSize);
+                mBuffer->remove(0, mSize);
+
+                // Switch to the state [waiting for the frame size]
+                mWaitForSize = true;
+                mSize = 0;
+
+                emit sigDataReceived(v_data);
             }
         }
     }
 
-    delete buffer;
-    delete s;
 }
 
 /*void cls_tcpClient::slotReadyRead()
@@ -241,7 +257,7 @@ void cls_tcpClient::slotDataReceived(QByteArray& data)
 {
     qDebug() << "Data received";
     QImage image;
-    image.loadFromData(data, "png");
+    image.loadFromData(data, "jpg");
     ui->lblImage->setPixmap(QPixmap::fromImage(image));
 }
 

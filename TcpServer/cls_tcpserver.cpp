@@ -271,7 +271,7 @@ void cls_tcpServer::SendImage(QTcpSocket* p_socket, const QImage& p_image)
 {
     QByteArray arrBlock;
     QBuffer buffer(&arrBlock);
-    p_image.save(&buffer, "png");
+    p_image.save(&buffer, "jpg");
     //qDebug() << "------------------------------------------------------------";
     //qDebug() << QString(arrBlock.toHex());
     //qDebug() << "------------------------------------------------------------";

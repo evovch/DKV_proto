@@ -3,6 +3,8 @@
 
 #include <QDebug>
 #include <QThread>
+#include <QGraphicsScene>
+#include <QGraphicsPixmapItem>
 
 #include "cls_broadcastreceiver.h"
 #include "cls_lvloop.h"
@@ -49,8 +51,17 @@ cls_boneServerMainWindow::cls_boneServerMainWindow(QWidget *parent) :
     theServer->show();
 
     mCameraObj = new cls_boneCamera(this);
-    mCameraObj->SetDrawWidget(ui->label);
+    //mCameraObj->SetDrawWidget(ui->label);
+    mCameraObj->setGrWidget(ui->graphicsView);
     connect(mCameraObj, SIGNAL(sigFrameReady(const QImage&)), theServer, SLOT(slotSendImageToAll(const QImage&)));
+
+    connect(lvLoopObj, SIGNAL(sigLvLoopTimer()), mCameraObj, SLOT(ProduceTestFrame()));
+
+
+    mGrScene = new QGraphicsScene();
+    mGrPixmapItem = new QGraphicsPixmapItem();
+    mGrScene->addItem(mGrPixmapItem);
+    ui->graphicsView->setScene(mGrScene);
 }
 
 cls_boneServerMainWindow::~cls_boneServerMainWindow()
@@ -62,6 +73,9 @@ cls_boneServerMainWindow::~cls_boneServerMainWindow()
 
     //TODO check
     delete mCameraObj;
+
+    delete mGrScene;
+    //delete mGrPixmapItem; //TODO Qt manages deletion?
 }
 
 // Singleton management

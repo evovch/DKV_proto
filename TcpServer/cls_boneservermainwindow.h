@@ -8,6 +8,8 @@ namespace Ui {
 }
 
 class cls_boneCamera;
+class QGraphicsScene;
+class QGraphicsPixmapItem;
 
 class cls_boneServerMainWindow : public QMainWindow
 {
@@ -32,6 +34,8 @@ private:
 
     cls_boneCamera* mCameraObj;
 
+    QGraphicsScene* mGrScene;
+    QGraphicsPixmapItem* mGrPixmapItem;
 };
 
 #endif // CLS_BONESERVERMAINWINDOW_H
