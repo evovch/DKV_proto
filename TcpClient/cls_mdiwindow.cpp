@@ -2,6 +2,7 @@
 #include "ui_cls_mdiwindow.h"
 
 #include <QtGlobal>
+#include <QDebug>
 
 #include "cls_formconnections.h"
 #include "cls_serverfinder.h"

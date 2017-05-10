@@ -6,7 +6,7 @@
 #include <QHostAddress>
 
 namespace Ui {
-    class cls_ServerFinder;
+    class cls_serverFinder;
 }
 
 class QUdpSocket;
@@ -44,7 +44,7 @@ private slots:
     void on_pbSendBroadcast_clicked();
 
 private:
-    Ui::cls_ServerFinder *ui;
+    Ui::cls_serverFinder *ui;
 
     // TCP scanner.
     QThread* tcpScannerThread;

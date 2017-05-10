@@ -15,7 +15,7 @@
 
 cls_serverFinder::cls_serverFinder(QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::cls_ServerFinder)
+    ui(new Ui::cls_serverFinder)
 {
     ui->setupUi(this);
 
